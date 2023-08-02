@@ -12,8 +12,8 @@
 #define ON_NB				1
 #define OFF					2
 //Modes Of LCD
-#define LCD_EIGHT_BITS_MODE	0
-#define LCD_FOUR_BITS_MODE  1
+#define LCD_EIGHT_PINS_MODE	0
+#define LCD_FOUR_PINS_MODE  1
 //Number As Macros
 #define ZERO			    0
 #define ONE  		        1

@@ -13,10 +13,10 @@
 /**************
  	 Options :
 ***************
-1-		 "LCD_EIGHT_BITS_MODE"
-2-		 "LCD_FOUR_BITS_MODE"
+1-		 "LCD_EIGHT_PINS_MODE"
+2-		 "LCD_FOUR_PINS_MODE"
 *********************************************/
-#define LCD_MODE			LCD_FOUR_BITS_MODE
+#define LCD_PINS_MODE		LCD_EIGHT_PINS_MODE
 /********************************************/
 
 /*______________________________________________ SET LCD CONTROL PINS ______________________________________________________*/
@@ -56,7 +56,7 @@
 2-		 "ON_NB"
 3-		 "OFF"
 *********************************************/
-#define LCD_CURSOR_MODE		OFF
+#define LCD_CURSOR_MODE		ON_NB
 
 
 

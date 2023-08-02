@@ -36,32 +36,53 @@ void LCD_vidPrintU32Number(u32 Cpy_u32Number);
 void LCD_vidPrintString(const u8 *Cpy_pU8String);
 
 /************************************************************************************************************
+ * @Description ! Function to make cursor go to a specific position on LCD to write on
+ *      @Output ! none
+ *      @Input  ! number of row, number of column
+ ************************************************************************************************************/
+void LCD_vidCursorGoTo(u8 Cpy_u8Row, u8 Cpy_u8Col);
+
+/************************************************************************************************************
+ * @Description ! Function to generate a new character in CGRAM
+ *      @Output ! none
+ *      @Input  ! pointer to your pattern, number of you pattern from 0 to 7
+ ************************************************************************************************************/
+void LCD_vidGeneratePattern(const u8 *Cpy_pu8Pattern, u8 Cpy_u8PatternID);
+
+/************************************************************************************************************
+ * @Description ! Function to print a special character you already generate
+ *      @Output ! none
+ *      @Input  ! number of your pattern to print
+ ************************************************************************************************************/
+void LCD_vidPrintSpecialChar(u8 Cpy_u8PatternID);
+
+/************************************************************************************************************
  * @Description ! Function to shift all data on LCD screen right by one cell
  *      @Output ! none
  *      @Input  ! number of cells to shift
  ************************************************************************************************************/
-void LCD_vidShiftDataRight(u8 Cpy_u8NumOfShift);
+void LCD_vidDataShiftRight(u8 Cpy_u8NumOfShift);
 
 /************************************************************************************************************
  * @Description ! Function to shift all data on LCD screen left by one cell
  *      @Output ! none
  *      @Input  ! number of cells to shift
  ************************************************************************************************************/
-void LCD_vidShiftDataLeft(u8 Cpy_u8NumOfShift);
+void LCD_vidDataShiftLeft(u8 Cpy_u8NumOfShift);
 
 /************************************************************************************************************
  * @Description ! Function to shift only the cursor right by one cell
  *      @Output ! none
  *      @Input  ! number of cells to shift
  ************************************************************************************************************/
-void LCD_vidShiftCursorRight(u8 Cpy_u8NumOfShift);
+void LCD_vidCursorShiftRight(u8 Cpy_u8NumOfShift);
 
 /************************************************************************************************************
  * @Description ! Function to shift only the cursor left by one cell
  *      @Output ! none
  *      @Input  ! number of cells to shift
  ************************************************************************************************************/
-void LCD_vidShiftCursorLeft(u8 Cpy_u8NumOfShift);
+void LCD_vidCursorShiftLeft(u8 Cpy_u8NumOfShift);
 
 /************************************************************************************************************
  * @Description ! Function to make the cursor return to the first cell

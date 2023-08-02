@@ -19,14 +19,16 @@
 static void LCD_vidWriteU8Command(u8 Cpy_u8Command)
 {
 	/*______________________________________________________ Eight Bits Mode _________________________________________________*/
-#if LCD_MODE == LCD_EIGHT_BITS_MODE
+#if LCD_PINS_MODE == LCD_EIGHT_PINS_MODE
 	DIO_vidPin_Write(LCD_RS_PIN, LOW);
+	DIO_vidPin_Write(LCD_RW_PIN, LOW);
 	DIO_vidPort_Write(LCD_DATA_PORT, Cpy_u8Command);
 #endif
 	/*______________________________________________________ Four Bits Mode __________________________________________________*/
-#if LCD_MODE == LCD_FOUR_BITS_MODE
+#if LCD_PINS_MODE == LCD_FOUR_PINS_MODE
 	//clear RS pin to select command mode
 	DIO_vidPin_Write(LCD_RS_PIN, LOW);
+	DIO_vidPin_Write(LCD_RW_PIN, LOW);
 	//send higher 4 bits
 	DIO_vidPin_Write(LCD_D7_PIN, GET_BIT(Cpy_u8Command, SEVEN));
 	DIO_vidPin_Write(LCD_D6_PIN, GET_BIT(Cpy_u8Command,   SIX));
@@ -45,14 +47,16 @@ static void LCD_vidWriteU8Command(u8 Cpy_u8Command)
 static void LCD_vidWriteU8Data(u8 Cpy_u8Data)
 {
 	/*______________________________________________________ Eight Bits Mode _________________________________________________*/
-#if LCD_MODE == LCD_EIGHT_BITS_MODE
+#if LCD_PINS_MODE == LCD_EIGHT_PINS_MODE
 	DIO_vidPin_Write(LCD_RS_PIN, HIGH);
+	DIO_vidPin_Write(LCD_RW_PIN, LOW);
 	DIO_vidPort_Write(LCD_DATA_PORT, Cpy_u8Data);
 #endif
 	/*______________________________________________________ Four Bits Mode __________________________________________________*/
-	#if LCD_MODE == LCD_FOUR_BITS_MODE
+	#if LCD_PINS_MODE == LCD_FOUR_PINS_MODE
 	//set RS pin to select data mode
 	DIO_vidPin_Write(LCD_RS_PIN, HIGH);
+	DIO_vidPin_Write(LCD_RW_PIN, LOW);
 	//send higher 4 bits
 	DIO_vidPin_Write(LCD_D7_PIN, GET_BIT(Cpy_u8Data, SEVEN));
 	DIO_vidPin_Write(LCD_D6_PIN, GET_BIT(Cpy_u8Data,   SIX));
@@ -76,7 +80,7 @@ void LCD_vidInit(void)
 {
 	_delay_ms(30);
 	/*______________________________________________________ Four Bits Mode __________________________________________________*/
-#if LCD_MODE == LCD_FOUR_BITS_MODE //LCD FOUT BITS MODE
+#if LCD_PINS_MODE == LCD_FOUR_PINS_MODE //LCD FOUT BITS MODE
 	//Function Set
 	DIO_vidPin_Write(LCD_D7_PIN,  LOW);
 	DIO_vidPin_Write(LCD_D6_PIN,  LOW);
@@ -85,7 +89,7 @@ void LCD_vidInit(void)
 	//Wait
 	LCD_vidSendUsEnablePulse(1000); //Send Enable Pulse, So That LCD Response
 	//Complete Function Set
-	LCD_vidWriteU8Command(0b00101011);
+	LCD_vidWriteU8Command(0b00101000);
 	LCD_vidSendUsEnablePulse(100); //Send Enable Pulse, So That LCD Response
 	//Set Display On/Off Settings
 	#if   LCD_CURSOR_MODE == OFF //If Choose Cursor Off
@@ -105,7 +109,7 @@ void LCD_vidInit(void)
 	LCD_vidSendUsEnablePulse(2000); //Send Enable Pulse, So That LCD Response
 #endif
 	/*______________________________________________________ Eight Bits Mode _________________________________________________*/
-#if LCD_MODE == LCD_EIGHT_BITS_MODE //LCD EIGHT BITS MODE
+#if LCD_PINS_MODE == LCD_EIGHT_PINS_MODE //LCD EIGHT BITS MODE
 	//Function Set In Eight Bits Mode
 	LCD_vidWriteU8Command(0b00111000);
 	LCD_vidSendUsEnablePulse(100); //Send Enable Pulse, So That LCD Response
@@ -127,6 +131,7 @@ void LCD_vidInit(void)
 	//Clear LCD
 	LCD_vidWriteU8Command(0b00000001);
 	LCD_vidSendUsEnablePulse(2000); //Send Enable Pulse, So That LCD Response
+
 #endif
 }
 /************************************************************************************************************
@@ -164,11 +169,11 @@ void LCD_vidPrintU32Number(u32 Cpy_u32Number)
 	u32 Local_u32Divisor = 10;
 	u8  Local_u8Digit;
 
-	while((Cpy_u32Number / Local_u32Divisor) > 10) //loop until reach last digit
+	while((Cpy_u32Number / Local_u32Divisor) != 0) //loop until reach last digit
 	{
 		Local_u32Divisor *= 10; //multiply by ten to go to next digit
 	} //end while loop
-
+	Local_u32Divisor /= 10;
 	while(Local_u32Divisor != 0) //loop until take all digits
 	{
 		Local_u8Digit = ((Cpy_u32Number / Local_u32Divisor) % 10); //extract all digits but start from higher one
@@ -177,6 +182,49 @@ void LCD_vidPrintU32Number(u32 Cpy_u32Number)
 		Local_u32Divisor /= 10; //divide by ten to get the the next digit
 	} //end while loop
 
+}
+/************************************************************************************************************
+ * @Description ! Function to make cursor go to a specific position on LCD to write on
+ *      @Output ! none
+ *      @Input  ! number of row, number of column
+ ************************************************************************************************************/
+void LCD_vidCursorGoTo(u8 Cpy_u8Row, u8 Cpy_u8Col)
+{
+	if(Cpy_u8Row == ZERO) //if first row
+	{
+		//The Address Is The Same The Number Of Column
+		SET_BIT(Cpy_u8Col, SEVEN); //Set Bit 7 To Set DDRAM Address
+		LCD_vidWriteU8Command(Cpy_u8Col); //Send The Address To LCD
+		LCD_vidSendUsEnablePulse(100); //Send Enable Pulse, So That LCD Response
+	}//end if
+	else if(Cpy_u8Row == ONE) //if second row
+	{
+		Cpy_u8Col = Cpy_u8Col + 0x40; //The Address Is The Same The Number Of Column + 0x40
+		SET_BIT(Cpy_u8Col, SEVEN); //Set Bit 7 To Set DDRAM Address
+		LCD_vidWriteU8Command(Cpy_u8Col); //Send The Address To LCD
+		LCD_vidSendUsEnablePulse(100); //Send Enable Pulse, So That LCD Response
+	}//end else if
+}
+/************************************************************************************************************
+ * @Description ! Function to generate a new character in CGRAM
+ *      @Output ! none
+ *      @Input  ! pointer to your pattern, number of you pattern from 0 to 7
+ ************************************************************************************************************/
+void LCD_vidGeneratePattern(const u8 *Cpy_pu8Pattern, u8 Cpy_u8PatternID)
+{
+	//Find The Address To Store Your Character
+	u8 Local_u8PatternAdd = Cpy_u8PatternID * 8; //8 is the size of one char
+	SET_BIT(Local_u8PatternAdd, 6); //Set Bit 6 In the Address To Access CGRAM
+	LCD_vidWriteU8Command(Local_u8PatternAdd); //Set CGRAM Address
+	LCD_vidSendUsEnablePulse(50); //Send Enable Pulse, So That LCD Response
+	//Store Your Pattern
+	for(u8 Local_u8Counter = ZERO; Local_u8Counter < EIGHT; Local_u8Counter++) //Loop To Store 8 Bytes Of Your Pattern
+	{
+		LCD_vidWriteU8Data(Cpy_pu8Pattern[Local_u8Counter]); //Write In The Address
+		LCD_vidSendUsEnablePulse(50); //Send Enable Pulse, So That LCD Response
+	} //end for
+	LCD_vidWriteU8Command(0x80); //return to DDRAM
+	LCD_vidSendUsEnablePulse(50); //Send Enable Pulse, So That LCD Response
 }
 /************************************************************************************************************
  * @Description ! Function to make the cursor return to the first cell
@@ -233,7 +281,7 @@ void LCD_vidDisplayOn(void)
  *      @Output ! none
  *      @Input  ! number of cells to shift
  ************************************************************************************************************/
-void LCD_vidShiftDataRight(u8 Cpy_u8NumOfShift)
+void LCD_vidDataShiftRight(u8 Cpy_u8NumOfShift)
 {
 	while(Cpy_u8NumOfShift) //Loop Until Finish Number Of Shifts
 	{
@@ -248,7 +296,7 @@ void LCD_vidShiftDataRight(u8 Cpy_u8NumOfShift)
  *      @Output ! none
  *      @Input  ! number of cells to shift
  ************************************************************************************************************/
-void LCD_vidShiftDataLeft(u8 Cpy_u8NumOfShift)
+void LCD_vidDataShiftLeft(u8 Cpy_u8NumOfShift)
 {
 	while(Cpy_u8NumOfShift) //Loop Until Finish Number Of Shifts
 	{
@@ -263,7 +311,7 @@ void LCD_vidShiftDataLeft(u8 Cpy_u8NumOfShift)
  *      @Output ! none
  *      @Input  ! number of cells to shift
  ************************************************************************************************************/
-void LCD_vidShiftCursorLeft(u8 Cpy_u8NumOfShift)
+void LCD_vidCursorShiftLeft(u8 Cpy_u8NumOfShift)
 {
 	while(Cpy_u8NumOfShift) //Loop Until Finish Number Of Shifts
 	{
@@ -278,7 +326,7 @@ void LCD_vidShiftCursorLeft(u8 Cpy_u8NumOfShift)
  *      @Output ! none
  *      @Input  ! number of cells to shift
  ************************************************************************************************************/
-void LCD_vidShiftCursorRight(u8 Cpy_u8NumOfShift)
+void LCD_vidCursorShiftRight(u8 Cpy_u8NumOfShift)
 {
 	while(Cpy_u8NumOfShift) //Loop Until Finish Number Of Shifts
 	{

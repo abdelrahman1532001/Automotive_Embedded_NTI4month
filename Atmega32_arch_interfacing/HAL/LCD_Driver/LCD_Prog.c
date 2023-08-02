@@ -160,9 +160,9 @@ void LCD_vidPrintString(const u8 *Cpy_pU8String)
 	} //end while
 }
 /************************************************************************************************************
- * @Description ! Function to print entire string on LCD screen
+ * @Description ! Function to print Unsigned Integer Number on LCD screen
  *      @Output ! none
- *      @Input  ! pointer to you string
+ *      @Input  ! Integer Number To Be Printed
  ************************************************************************************************************/
 void LCD_vidPrintU32Number(u32 Cpy_u32Number)
 {
@@ -181,6 +181,46 @@ void LCD_vidPrintU32Number(u32 Cpy_u32Number)
 		LCD_vidPrintU8Char(Local_u8Digit); //print the converted data on LCD
 		Local_u32Divisor /= 10; //divide by ten to get the the next digit
 	} //end while loop
+
+}
+/************************************************************************************************************
+ * @Description ! Function to print Signed Integer Number on LCD screen
+ *      @Output ! none
+ *      @Input  ! Integer Number To Be Printed
+ ************************************************************************************************************/
+void LCD_vidPrintS32Number(s32 Cpy_s32Number)
+{
+	u8  Local_u8NumberDigits[11]; //Array To Save Digits As Characters
+	u8  Local_u8Counter = 0; //Counter To Save In Digits' Array
+	s32 Local_s32iLoop; //Counter To Print Digits On LCD
+	u8  Local_u8NegativeFlag = 0; //Flag To Detect Negative Sign
+
+	//Check If The Number Is Negative Or Not
+	if(Cpy_s32Number < 0)  //If Negative
+	{
+		Local_u8NegativeFlag = 1; //Set The Negative Flag
+		Cpy_s32Number = Cpy_s32Number * -1; //Convert Number To Positive
+	} //End If
+
+	//Loop And Extract Digits
+	do{
+		Local_u8NumberDigits[Local_u8Counter] = (Cpy_s32Number % 10) + '0'; //Take Least Digit Of The Number And Convert It To Char
+		Local_u8Counter++; //Increase Counter To Save In Next Digit
+		Cpy_s32Number /= 10; //Delete The Least Digit After Save It In Array Of Digits
+	}while(Cpy_s32Number != 0); //Exit When Finishing All Digits
+
+	//Check Negative Flag
+	if(Local_u8NegativeFlag == 1)
+	{
+		Local_u8NumberDigits[Local_u8Counter] = '-';
+		Local_u8Counter++;
+	}
+
+	//Loop Over Digits To Print Them
+	for(Local_s32iLoop = Local_u8Counter - 1; Local_s32iLoop >= 0; Local_s32iLoop--)
+	{
+		LCD_vidPrintU8Char(Local_u8NumberDigits[Local_s32iLoop]); //Print Digits On LCD
+	} //End For Loop
 
 }
 /************************************************************************************************************

@@ -29,6 +29,13 @@ void LCD_vidPrintU8Char(u8 Cpy_u8Char);
 void LCD_vidPrintU32Number(u32 Cpy_u32Number);
 
 /************************************************************************************************************
+ * @Description ! Function to print Signed Integer Number on LCD screen
+ *      @Output ! none
+ *      @Input  ! Integer Number To Be Printed
+ ************************************************************************************************************/
+void LCD_vidPrintS32Number(s32 Cpy_s32Number);
+
+/************************************************************************************************************
  * @Description ! Function to print entire string on LCD screen
  *      @Output ! none
  *      @Input  ! pointer to you string

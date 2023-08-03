@@ -71,12 +71,16 @@ void DIO_vidPin_Write(DIO_PIN_NAME_e Cpy_PinName, DIO_PIN_VOLT_e Cpy_PinState)
 	} //end switch
 } //end function
 
-DIO_PIN_VOLT_e DIO_u8Pin_Read (DIO_PIN_NAME_e Cpy_PinName)
+DIO_PIN_VOLT_e DIO_Pin_Read (DIO_PIN_NAME_e Cpy_PinName)
 {
-	u16 Local_u16PortOffest = Cpy_PinName / 8; //get the port offset
-	u16 Local_u16PinOffest  = Cpy_PinName % 8; //get the pin number
+	u16 Local_u16PortOffest;
+	u16 Local_u16PinOffest;
+	DIO_PIN_VOLT_e Local_u8Read;
 
-	DIO_PIN_VOLT_e Local_u8Read = GET_BIT((*(AT32_PORT_REG_BASE + Local_u16PortOffest * AT32_REG_STEP)), Local_u16PinOffest);
+	Local_u16PortOffest = Cpy_PinName / 8; //get the port offset
+	Local_u16PinOffest  = Cpy_PinName % 8; //get the pin number
+
+	Local_u8Read = GET_BIT((*(AT32_PIN_REG_BASE + Local_u16PortOffest * AT32_REG_STEP)), Local_u16PinOffest); //Read The Desired Pin
 
 	return Local_u8Read;
 

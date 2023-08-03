@@ -14,10 +14,10 @@ const DIO_PIN_MODE_e PinsArrModes[TOTAL_PINs] = {
 		OUTPUT,     /* PORTD pin1 */
 		OUTPUT,     /* PORTD pin2 */
 		OUTPUT,     /* PORTD pin3 */               /* PORTD */
-		OUTPUT,     /* PORTD pin4 */               /* Modes "OUTPUT" "INFREE" "INPULL" */
-		OUTPUT,     /* PORTD pin5 */
-		OUTPUT,     /* PORTD pin6 */
-		OUTPUT,     /* PORTD pin7 */
+		INPULL,     /* PORTD pin4 */               /* Modes "OUTPUT" "INFREE" "INPULL" */
+		INPULL,     /* PORTD pin5 */
+		INPULL,     /* PORTD pin6 */
+		INPULL,     /* PORTD pin7 */
 		/************************************************************/
 		OUTPUT,     /* PORTC pin0 */
 		OUTPUT,     /* PORTC pin1 */
@@ -45,7 +45,4 @@ const DIO_PIN_MODE_e PinsArrModes[TOTAL_PINs] = {
 		OUTPUT,     /* PORTA pin5 */
 		OUTPUT,     /* PORTA pin6 */
 		OUTPUT,     /* PORTA pin7 */
-		TOTAL_PINs
-
-
 };

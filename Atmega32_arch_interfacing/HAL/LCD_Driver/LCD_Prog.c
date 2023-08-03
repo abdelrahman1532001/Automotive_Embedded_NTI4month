@@ -9,7 +9,7 @@
 #include "../../LIB/Std_Types.h"
 #include "../../LIB/Bit_Math.h"
 
-#include "../../MCAL/AT32_DIO_Driver/DIO_Interface.h"
+#include "../../MCAL/DIO_Driver/DIO_Interface.h"
 
 #include "LCD_Cfg.h"
 #include "LCD_Interface.h"

@@ -4,11 +4,12 @@
     - MCAL
         - [DIO Driver](Atmega32_arch_interfacing/MCAL/DIO_Driver) 🚦
     - HAL
-        - KEYPAD Driver 🎛️
-        - LCD Driver 🖥️
+        - [KEYPAD Driver](Atmega32_arch_interfacing/HAL/KEYPAD_Driver) 🎛️
+        - [LCD Driver](Atmega32_arch_interfacing/HAL/LCD_Driver) 🖥️
     - LIB
         - Std_Types.h 📚
         - Bit_Math.h 🔢
     - PROJECTS 🛠️
-        - Converter Project 🔄
+        - [Converter Project](Atmega32_arch_interfacing/Projects/Converter) 🔄
             - Tool⚙️: Proteus, Eclipse, Atmega32, LCD, Keypad, LCD Driver, KEYPAD Driver, DIO Driver 🛠️🌟
+            - [Simulation Folder](Atmega32_arch_interfacing/Projects/Converter/Simulation_Proteus)

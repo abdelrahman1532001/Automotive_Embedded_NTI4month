@@ -2,13 +2,13 @@
 ## My progress 📈🚀
 - *Atmega32 interfacing* 💻
  - MCAL
-  - DIO Driver 🚦
- - HAL
-  - KEYPAD Driver 🎛️
-  - LCD Driver 🖥️
- - LIB
-  - Std_Types.h 📚
-  - Bit_Math.h 🔢
- - PROJECTS 🛠️
-  - Converter Project 🔄
-   - Tool⚙️: Proteus, Eclipse, Atmega32, LCD, Keypad, LCD Driver, KEYPAD Driver, DIO Driver 🛠️🌟
+- DIO Driver 🚦
+- HAL
+- KEYPAD Driver 🎛️
+- LCD Driver 🖥️
+- LIB
+- Std_Types.h 📚
+- Bit_Math.h 🔢
+- PROJECTS 🛠️
+- Converter Project 🔄
+- Tool⚙️: Proteus, Eclipse, Atmega32, LCD, Keypad, LCD Driver, KEYPAD Driver, DIO Driver 🛠️🌟

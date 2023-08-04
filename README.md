@@ -11,4 +11,11 @@
         - Bit_Math.h 🔢
     - **PROJECTS** 🛠️
         - [Converter Project](Atmega32_arch_interfacing/Projects/Converter) 🔄
-            - Tool⚙️: Proteus, Eclipse, Atmega32, LCD, Keypad, LCD Driver, KEYPAD Driver, DIO Driver 🛠️🌟             
+            - Tool⚙️: Proteus, Eclipse, Atmega32, LCD, Keypad, LCD Driver, KEYPAD Driver, DIO Driver 🛠️🌟
+
+### Progress Bars 🚀
+- Atmega32 interfacing: [=======>      ] 50% Complete
+- MCAL: [==========>  ] 80% Complete
+- HAL: [======>     ] 60% Complete
+- LIB: [=========>  ] 70% Complete
+- PROJECTS: [=========>  ] 70% Complete

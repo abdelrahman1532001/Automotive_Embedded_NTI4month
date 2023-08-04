@@ -2,7 +2,7 @@
 ## My progress  ![my progress](https://progress-bar.dev/28/?title=progress)
 - **Atmega32 interfacing** 💻
     - **MCAL**
-        - [DIO Driver](Atmega32_arch_interfacing/MCAL/DIO_Driver) 🚦
+        - [DIO Driver](Atmega32_arch_interfacing/MCAL/DIO_Driver) 🚦  ![my progress](https://progress-bar.dev/100/?title=done)
     - **HAL**
         - [KEYPAD Driver](Atmega32_arch_interfacing/HAL/KEYPAD_Driver) 🎛️
         - [LCD Driver](Atmega32_arch_interfacing/HAL/LCD_Driver) 🖥️

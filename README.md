@@ -1,4 +1,7 @@
 # Automotive_Embedded_NTI4month 🚗 
+'''c
+starting date⏳ : 15/7/2023
+
 ## My progress  ![my progress](https://progress-bar.dev/28/?title=progress)
 - **Atmega32 interfacing** 💻
     - **MCAL**

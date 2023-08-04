@@ -14,8 +14,6 @@
             - Tool⚙️: Proteus, Eclipse, Atmega32, LCD, Keypad, LCD Driver, KEYPAD Driver, DIO Driver 🛠️🌟
 
 ### Progress Bars 🚀
-- Atmega32 interfacing: [=======>      ] 50% Complete
-- MCAL: [==========>  ] 80% Complete
-- HAL: [======>     ] 60% Complete
-- LIB: [=========>  ] 70% Complete
-- PROJECTS: [=========>  ] 70% Complete
+<div style="background-color: lightgray; border: 1px solid gray; border-radius: 5px; width: 200px;">
+  <div style="background-color: blue; height: 10px; border-radius: 5px; width: 50%;"></div>
+</div>

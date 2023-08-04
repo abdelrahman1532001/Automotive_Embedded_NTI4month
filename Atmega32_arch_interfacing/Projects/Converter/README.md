@@ -1,1 +1,1 @@
-<img src="Photos/LCD_KPD_Converter.png" width="300">
+<img src="Photos/LCD_KPD_Converter.png" width="500">

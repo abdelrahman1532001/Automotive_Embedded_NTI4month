@@ -2,7 +2,7 @@
 ## My progress 📈🚀
 - *Atmega32 interfacing* 💻
     - MCAL
-        - [DIO Driver](MCAL/DIO_Driver) 🚦
+        - [DIO Driver](Atmega32_arch_interfacing/MCAL/DIO_Driver) 🚦
     - HAL
         - KEYPAD Driver 🎛️
         - LCD Driver 🖥️

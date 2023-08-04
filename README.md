@@ -1,5 +1,5 @@
 # Automotive_Embedded_NTI4month 🚗 
-## My progress 📈🚀![my progress](https://progress-bar.dev/28/?title=progress)
+## My progress![my progress](https://progress-bar.dev/28/?title=progress)
 - **Atmega32 interfacing** 💻
     - **MCAL**
         - [DIO Driver](Atmega32_arch_interfacing/MCAL/DIO_Driver) 🚦

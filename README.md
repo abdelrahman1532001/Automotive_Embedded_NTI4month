@@ -14,6 +14,6 @@
             - Tool⚙️: Proteus, Eclipse, Atmega32, LCD, Keypad, LCD Driver, KEYPAD Driver, DIO Driver 🛠️🌟
 
 ### Progress Bars 🚀
-<div style="background-color: lightgray; border: 1px solid gray; border-radius: 5px; width: 200px;">
-  <div style="background-color: blue; height: 10px; border-radius: 5px; width: 50%;"></div>
-</div>
+<div style="background-color: lightgray; border: 1px solid gray; border-radius: 5px; width: 200px;"></div>
+<div style="background-color: blue; height: 10px; border-radius: 5px; width: 50%;"></div>
+

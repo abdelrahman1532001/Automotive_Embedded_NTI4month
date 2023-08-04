@@ -13,4 +13,4 @@
         - [Converter Project](Atmega32_arch_interfacing/Projects/Converter) 🔄
             - Tool⚙️: Proteus, Eclipse, Atmega32, LCD, Keypad, LCD Driver, KEYPAD Driver, DIO Driver 🛠️🌟
             - [Simulation Folder](Atmega32_arch_interfacing/Projects/Converter/Simulation_Proteus)
-            - <img src="Atmega32_arch_interfacing/Projects/Converter/Photos/LCD_KPD_Converter.png" width="300px">
+             <img src="Atmega32_arch_interfacing/Projects/Converter/Photos/LCD_KPD_Converter.png" width="300px">

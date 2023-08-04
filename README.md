@@ -11,6 +11,4 @@
         - Bit_Math.h 🔢
     - **PROJECTS** 🛠️
         - [Converter Project](Atmega32_arch_interfacing/Projects/Converter) 🔄
-            - Tool⚙️: Proteus, Eclipse, Atmega32, LCD, Keypad, LCD Driver, KEYPAD Driver, DIO Driver 🛠️🌟
-            - [Simulation Folder](Atmega32_arch_interfacing/Projects/Converter/Simulation_Proteus)
-             
+            - Tool⚙️: Proteus, Eclipse, Atmega32, LCD, Keypad, LCD Driver, KEYPAD Driver, DIO Driver 🛠️🌟             

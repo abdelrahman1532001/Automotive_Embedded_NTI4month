@@ -13,10 +13,3 @@
         - [Converter Project](Atmega32_arch_interfacing/Projects/Converter)   ![my progress](https://progress-bar.dev/90/?title=progress)
             - Tool⚙️: Proteus, Eclipse, Atmega32, LCD, Keypad, LCD Driver, KEYPAD Driver, DIO Driver 🛠️🌟
 
-### Progress Bars 🚀
-
-- Atmega32 interfacing: ![Atmega32 interfacing](https://progress-bar.dev/50/?title=50%25)
-- MCAL: ![MCAL](https://progress-bar.dev/80/?title=80%25)
-- HAL: ![HAL](https://progress-bar.dev/60/?title=60%25)
-- LIB: ![LIB](https://progress-bar.dev/70/?title=70%25)
-- PROJECTS: ![PROJECTS](https://progress-bar.dev/70/?title=70%25)

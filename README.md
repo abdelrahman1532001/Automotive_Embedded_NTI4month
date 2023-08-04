@@ -1,7 +1,7 @@
 # Automotive_Embedded_NTI4month 🚗
 ## My progress 📈🚀
 - *Atmega32 interfacing* 💻
- - MCAL
+    - MCAL
 - DIO Driver 🚦
 - HAL
 - KEYPAD Driver 🎛️

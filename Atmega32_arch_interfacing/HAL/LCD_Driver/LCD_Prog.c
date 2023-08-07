@@ -224,6 +224,67 @@ void LCD_vidPrintS32Number(s32 Cpy_s32Number)
 
 }
 /************************************************************************************************************
+ * @Description ! Function to print The Binary Of Number on LCD screen
+ *      @Output ! none
+ *      @Input  ! Unsigned Number
+ ************************************************************************************************************/
+void LCD_vidPrintU32Binary(u32 Cpy_u32Number)
+{
+	s32 Local_u8Counter = 31; //counter to start from the bit 32
+
+	while(GET_BIT(Cpy_u32Number, Local_u8Counter) == 0) //Loop Until Reach The Higher One Bit (0b000~~~00'1'0010).
+	{
+		Local_u8Counter--; //Decrease The Counter To Read Next Low Bit In Next Iteration
+		if(Local_u8Counter == 1) //If All Bits Are Zeros (0b00000~~~000000) Stop To Print Last Bit.
+		{
+			break; //Get Out Of The While Loop
+		} //End If
+	} //End While Loop
+
+	LCD_vidPrintString("0b"); //Print The Binary Code On LCD Screen
+
+	for( ; Local_u8Counter >= 0; Local_u8Counter--) //Loop To Start Print From Higher One To End Of Binary
+	{
+		LCD_vidPrintU8Char((GET_BIT(Cpy_u32Number, Local_u8Counter) + '0')); //Print The Bit On LCD Screen
+	} //End For Loop
+}
+/************************************************************************************************************
+ * @Description ! Function to print The Hexadecimal Code Of The Number on LCD screen
+ *      @Output ! none
+ *      @Input  ! Unsigned Number
+ ************************************************************************************************************/
+void LCD_vidPrintU32Hex(u32 Cpy_u32Number)
+{
+	u8  Local_u8HexDigitValue;
+	u8  Local_u8HexArrLetters[] = {'A', 'B', 'C', 'D', 'E', 'F'}; //Save Hex Letters In Array
+	s32 Local_u8Counter = 28; //counter to start from the bit 28 to read Higher 4 bits
+
+	//Read 4 Bits By 4 Bits And Stop When Read Value > 0
+	while(((Cpy_u32Number >> Local_u8Counter) & (0b1111)) == 0)
+	{
+		Local_u8Counter -= 4; //Decrease Counter By 4 To Read The Next 4 Bits
+		if(Local_u8Counter == 4) //Stop At The Second Hex Digit To Print At Least Two Digit Hex
+		{
+			break; //Exit From While Loop
+		} //End If
+	} //End While Loop
+
+	LCD_vidPrintString("0x");//Print "0x" On LCD Screen
+
+	for( ; Local_u8Counter >= 0; Local_u8Counter-=4)//Start From First 4 Higher Active Bits To The End
+	{
+		Local_u8HexDigitValue = ((Cpy_u32Number >> Local_u8Counter) & (0b1111));//Read 4 Bits
+		if(Local_u8HexDigitValue > 9)
+		{
+			LCD_vidPrintU8Char(Local_u8HexArrLetters[Local_u8HexDigitValue - 10]);//Print Equivalent Hex Letter
+		}//End If
+		else
+		{
+			LCD_vidPrintU8Char(Local_u8HexDigitValue + '0');//Print Digit On LCD Screen
+		}//End Else
+	}//End For Loop
+}
+/************************************************************************************************************
  * @Description ! Function to make cursor go to a specific position on LCD to write on
  *      @Output ! none
  *      @Input  ! number of row, number of column

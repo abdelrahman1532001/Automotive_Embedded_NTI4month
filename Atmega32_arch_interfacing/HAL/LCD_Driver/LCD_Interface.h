@@ -36,6 +36,20 @@ void LCD_vidPrintU32Number(u32 Cpy_u32Number);
 void LCD_vidPrintS32Number(s32 Cpy_s32Number);
 
 /************************************************************************************************************
+ * @Description ! Function to print The Binary Code Of The Number on LCD screen
+ *      @Output ! none
+ *      @Input  ! Unsigned Number
+ ************************************************************************************************************/
+void LCD_vidPrintU32Binary(u32 Cpy_u32Number);
+
+/************************************************************************************************************
+ * @Description ! Function to print The Hexadecimal Code Of The Number on LCD screen
+ *      @Output ! none
+ *      @Input  ! Unsigned Number
+ ************************************************************************************************************/
+void LCD_vidPrintU32Hex(u32 Cpy_u32Number);
+
+/************************************************************************************************************
  * @Description ! Function to print entire string on LCD screen
  *      @Output ! none
  *      @Input  ! pointer to you string

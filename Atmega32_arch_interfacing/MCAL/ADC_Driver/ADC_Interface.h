@@ -22,11 +22,10 @@ void ADC_vidInit(void);
 
 /*********************************************************************
     @Description ! Function to read ADC after conversion complete.
-    @return      ! 0 for incomplete reading.
-    			   1 for complete reading.
-    @arguments   ! Address of reading variable(u16 *).
+    @return      ! reading of ADC
+    @arguments   ! name of channel to read.
 *********************************************************************/
-u8  ADC_u8PeriodicReadChannel(u16 *Cpy_pu16AdcReading);
+u16  ADC_u8BusyReadChannel(ADC_ChannelName_t Cpy_ChannelName);
 
 /*********************************************************************
     @Description ! Function to start conversion

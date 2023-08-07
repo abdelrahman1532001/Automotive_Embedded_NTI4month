@@ -5,10 +5,11 @@
 - **Atmega32 interfacing** 💻
     - **MCAL**
         - [DIO Driver](Atmega32_arch_interfacing/MCAL/DIO_Driver)   ![my progress](https://progress-bar.dev/100/?title=done)
-        - [ADC Driver](Atmega32_arch_interfacing/MCAL/ADC_Driver)   ![my progress](https://progress-bar.dev/80/?title=progress)
+        - [ADC Driver](Atmega32_arch_interfacing/MCAL/ADC_Driver)   ![my progress](https://progress-bar.dev/50/?title=progress)
     - **HAL**
        - [KEYPAD Driver](Atmega32_arch_interfacing/HAL/KEYPAD_Driver)   ![my progress](https://progress-bar.dev/100/?title=done)
        - [LCD Driver](Atmega32_arch_interfacing/HAL/LCD_Driver)   ![my progress](https://progress-bar.dev/100/?title=done)
+       - [LM35 Driver](Atmega32_arch_interfacing/HAL/LM35_Driver)   ![my progress](https://progress-bar.dev/50/?title=progress)
     - **LIB**
         - Std_Types.h   ![my progress](https://progress-bar.dev/100/?title=done)
         - Bit_Math.h   ![my progress](https://progress-bar.dev/100/?title=done)

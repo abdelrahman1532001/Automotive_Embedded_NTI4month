@@ -1,11 +1,13 @@
-# Automotive_Embedded_NTI4month 🚗 
+ # Automotive_Embedded_NTI4month 🚗.
+`starting date⏳ : 15/7/2023`
+
 ## My progress  ![my progress](https://progress-bar.dev/28/?title=progress)
 - **Atmega32 interfacing** 💻
     - **MCAL**
         - [DIO Driver](Atmega32_arch_interfacing/MCAL/DIO_Driver)   ![my progress](https://progress-bar.dev/100/?title=done)
     - **HAL**
-        - [KEYPAD Driver](Atmega32_arch_interfacing/HAL/KEYPAD_Driver)   ![my progress](https://progress-bar.dev/100/?title=done)
-        - [LCD Driver](Atmega32_arch_interfacing/HAL/LCD_Driver)   ![my progress](https://progress-bar.dev/100/?title=done)
+       - [KEYPAD Driver](Atmega32_arch_interfacing/HAL/KEYPAD_Driver)   ![my progress](https://progress-bar.dev/100/?title=done)
+       - [LCD Driver](Atmega32_arch_interfacing/HAL/LCD_Driver)   ![my progress](https://progress-bar.dev/100/?title=done)
     - **LIB**
         - Std_Types.h   ![my progress](https://progress-bar.dev/100/?title=done)
         - Bit_Math.h   ![my progress](https://progress-bar.dev/100/?title=done)

@@ -8,6 +8,7 @@
         - [ADC Driver](Atmega32_arch_interfacing/MCAL/ADC_Driver)   ![my progress](https://progress-bar.dev/50/?title=WithOutInterrupt)
         - [EXTI Driver](Atmega32_arch_interfacing/MCAL/EXTI)   ![my progress](https://progress-bar.dev/98/?title=AlmostDone)
         - [GIE Driver](Atmega32_arch_interfacing/MCAL/GIE)   ![my progress](https://progress-bar.dev/100/?title=completed)
+        - [TIMERs Driver](Atmega32_arch_interfacing/MCAL/TIMERs)   ![my progress](https://progress-bar.dev/33/?title=progress)
     - **HAL**
        - [KEYPAD Driver](Atmega32_arch_interfacing/HAL/KEYPAD_Driver)   ![my progress](https://progress-bar.dev/100/?title=done)
        - [LCD Driver](Atmega32_arch_interfacing/HAL/LCD_Driver)   ![my progress](https://progress-bar.dev/100/?title=done)

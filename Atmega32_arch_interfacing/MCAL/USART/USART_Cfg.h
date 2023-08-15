@@ -50,6 +50,7 @@
  * 		3- BD_9600_
  */
 #define USART_BAUD_RATE		BD_9600_
+
 /* ```````````````````````````````
  * Parity mode Options :
  * ```````````````````````````````
@@ -71,10 +72,7 @@
  * Stop sending if exceeds this time limit
  */
 #define USART_TIMEOUT		1000UL
-/*
- * number of try re-sending data if failed
- */
-#define USART_RESEND_NUM	3
+
 /*
  * key to terminate reading
  */

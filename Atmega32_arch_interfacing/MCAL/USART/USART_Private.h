@@ -8,6 +8,25 @@
 #ifndef USART_PRIVATE_H_
 #define USART_PRIVATE_H_
 
+static enum{
+	TX_CHAR,
+	TX_STRING
+}TX_ISR_SOURCE;
+
+static enum{
+	RX_CHAR,
+	RX_STRING
+}RX_ISR_SOURCE;
+
+//Interrupts vectors
+#define RXC_VECT	__vector_13
+#define UDRE_VECT	__vector_14
+#define TXC_VECT	__vector_15
+
+//ISR macro
+#define ISR(__vect_n)	void __vect_n (void) __attribute__((signal));\
+						void __vect_n (void)
+
 /*_______________________________________Registers________________________________________________*/
 
 //USART I/O Data Register - UDR

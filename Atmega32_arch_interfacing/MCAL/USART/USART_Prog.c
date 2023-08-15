@@ -12,8 +12,30 @@
 #include "USART_Interface.h"
 #include "USART_Private.h"
 
+USART_STATUS_t USART_STATUS;
+
+//Control sending char Asynchronous
+static void (*g_pTxCharNotifyFunc)(void) = NULL;
+//Control sending string Asynchronous
+static void (*g_pTxStringNotifyFunc)(void) = NULL;
+volatile static       u8  g_u8TxStringIndex;
+volatile static const u8* g_pU8TxStringBuffer;
+
+//Control reading char Asynchronous
+static void (*g_pRxCharNotifyFunc)(void) = NULL;
+volatile static u8* g_pU8RxCharBuffer;
+//Control reading string Asynchronous
+static void (*g_pRxStringNotifyFunc)(void) = NULL;
+volatile static u8  g_u8RxStringIndex;
+volatile static u8  g_u8RxStringSize;
+volatile static u8* g_pU8RxStringBuffer;
+
+
 void USART_vidInit(void)
 {
+	//USART idle by default
+	USART_STATUS = USART_IDLE;
+
 	//Buffer to help in access 'UCSRC' register
 	u16 Local_u16UBRR_Buffer;
 
@@ -69,7 +91,7 @@ void USART_vidInit(void)
 USART_ERROR_t USART_ErrSendCharSync(u8 Cpy_u8DataFrame)
 {
 	//Timeout counter
-	USART_ERROR_t ERR = TX_SUCCESS;
+	USART_ERROR_t ERR = ES_SUCCESS;
 	u32 Local_u32TimeOutCounter=0;
 
 	//Start sending data
@@ -84,7 +106,7 @@ USART_ERROR_t USART_ErrSendCharSync(u8 Cpy_u8DataFrame)
 	//Check if exit due to time out
 	if(Local_u32TimeOutCounter == USART_TIMEOUT)
 	{
-		ERR = TX_FAILED_TIMEOUT;
+		ERR = ES_TIMEOUT;
 	}
 
 	//Clear flag
@@ -96,40 +118,54 @@ USART_ERROR_t USART_ErrSendCharSync(u8 Cpy_u8DataFrame)
 
 USART_ERROR_t USART_ErrReadCharSync(u8* Cpy_pu8DataFrame)
 {
-	USART_ERROR_t ERR = RX_SUCCESS;
+	USART_ERROR_t ERR = ES_SUCCESS;
 
-	//Wait reading to complete
-	while(!(GET_BIT(USART_UCSRA_REG, UCSRA_RXC)));
+	if(Cpy_pu8DataFrame == NULL)
+	{
+		ERR = ES_NULL_POINTER;
+	}
+	else
+	{
+		//Wait reading to complete
+		while(!(GET_BIT(USART_UCSRA_REG, UCSRA_RXC)));
 
-	//Read UDR register
-	*Cpy_pu8DataFrame = USART_UDR_REG;
+		//Read UDR register
+		*Cpy_pu8DataFrame = USART_UDR_REG;
+	}
 
 	return ERR;
 }
 
 USART_ERROR_t USART_ErrReadStringSync(u8* const Cpy_pU8String, u8 Cpy_u8Size)
 {
-	USART_ERROR_t ERR = TX_SUCCESS; //Default status of sending
+	USART_ERROR_t ERR = ES_SUCCESS; //Default status
 	u8 Local_u8iLoop = 0;
 
-	do{
-		//Read UDR
-		ERR = USART_ErrReadCharSync(&(Cpy_pU8String[Local_u8iLoop]));
+	if(Cpy_pU8String == NULL)
+	{
+		ERR = ES_NULL_POINTER;
+	}
+	else
+	{
+		do{
+			//Read UDR
+			ERR = USART_ErrReadCharSync(&(Cpy_pU8String[Local_u8iLoop]));
 
-		//Check Reading status
-		if(ERR == RX_SUCCESS)
-		{
+			//Check Reading status
+			if(ERR == ES_NULL_POINTER)
+			{
+				break;
+			}
+
+			//Move to next char
 			Local_u8iLoop++;
-		}
-		else{
-			break;
-		}
 
-	}while((Cpy_pU8String[Local_u8iLoop-1] != END_READING_KEY) && (Local_u8iLoop < Cpy_u8Size));
+		}while((Cpy_pU8String[Local_u8iLoop-1] != END_READING_KEY) && (Local_u8iLoop < Cpy_u8Size));
 
-	//terminate string
-	Cpy_pU8String[Local_u8iLoop-1] = '\0'; //case of terminate key
-	Cpy_pU8String[Cpy_u8Size-1] = '\0'; //case of size limit
+		//terminate string
+		Cpy_pU8String[Local_u8iLoop-1] = '\0'; //case of terminate key
+		Cpy_pU8String[Cpy_u8Size-1] = '\0'; //case of size limit
+	}
 
 	return ERR;
 }
@@ -137,40 +173,315 @@ USART_ERROR_t USART_ErrReadStringSync(u8* const Cpy_pU8String, u8 Cpy_u8Size)
 
 USART_ERROR_t USART_ErrSendStringSync(const u8* Cpy_pU8String)
 {
-	USART_ERROR_t ERR = TX_SUCCESS; //Default status of sending
+	USART_ERROR_t ERR = ES_SUCCESS; //Default status of sending
 	u8 Local_u8iLoop = 0; //Counter to loop on string
-	u8 Local_u8ResendCounter = 0; //Counter to count number of re-send data
 
-	//Loop until find string terminator
-	while(Cpy_pU8String[Local_u8iLoop] != '\0')
+	if(Cpy_pU8String == NULL)
 	{
-		//Sending the current character
-		ERR = USART_ErrSendCharSync(Cpy_pU8String[Local_u8iLoop]);
+		ERR = ES_NULL_POINTER;
+	}
+	else
+	{
+		//Loop until find string terminator
+		while(Cpy_pU8String[Local_u8iLoop] != '\0')
+		{
+			//Sending the current character
+			ERR = USART_ErrSendCharSync(Cpy_pU8String[Local_u8iLoop]);
 
-		//Check sending status
-		if(ERR == TX_SUCCESS)
-		{
-			Local_u8iLoop++; //Increase counter string to send next data
-		}
-		//if send char failed
-		else if(ERR == TX_FAILED_TIMEOUT)
-		{
-			Local_u8ResendCounter++; //Increase number of re-send counter
-			if(Local_u8ResendCounter > USART_RESEND_NUM) //check limits
+			//Check sending status
+			if(ERR == ES_TIMEOUT)
 			{
-				ERR = TX_FAILED_RESEND_NUM; //Save error status
-				break; //Exit from sending
-			}//end inner if
-		}//end out if
-	}//end while loop
+				break; //Terminate sending
+			}
+
+			Local_u8iLoop++; //Increase counter string to send next data
+		}//end while loop
+	}
 	return ERR;
 }
 
 
-void USART_vidPrintNewLine(void)
+USART_ERROR_t USART_ErrPrintNewLine(void)
 {
+	//Status of sending
+	USART_ERROR_t ERR;
+
 	//Sending ASCII of ENTER key
-	USART_ErrSendCharSync('\r');
+	ERR = USART_ErrSendCharSync('\r');
+
+	return ERR;
+}
+
+USART_ERROR_t USART_ErrSendCharAsync(u8  Cpy_u8Char, void (*ptrNotificationFunc)(void))
+{
+    USART_ERROR_t ERR;
+
+    if(USART_STATUS == USART_IDLE)
+    {
+    	//Make USART busy until transmit complete
+    	USART_STATUS = USART_BUSY;
+
+    	//Set ISR source to tx_char
+    	TX_ISR_SOURCE = TX_CHAR;
+
+        //Passing notification function to ISR
+        g_pTxCharNotifyFunc = ptrNotificationFunc;
+
+        //Put data in the UDR register
+        USART_UDR_REG = Cpy_u8Char;
+
+        //Enable UDR empty interrupt
+        SET_BIT(USART_UCSRB_REG, UCSRB_UDRIE);
+
+    	//Sending success
+    	ERR = ES_SUCCESS;
+
+    }
+    else
+    {
+    	ERR = ES_BUSY_FUNC;
+    }
+
+    return ERR;
+}
+
+USART_ERROR_t USART_ErrSendStringAsync(const u8  *Cpy_pu8String ,void (*ptrNotificationFunc)(void))
+{
+    USART_ERROR_t ERR;
+    if(USART_STATUS == USART_IDLE)
+    {
+        //Check if data pointer is valid
+        if(Cpy_pu8String == NULL)
+        {
+        	//If not valid return error null pointer
+        	ERR = ES_NULL_POINTER;
+        }
+        else
+        {
+        	//Make USART busy until transmit complete
+        	USART_STATUS = USART_BUSY;
+
+        	//Set ISR source to tx_char
+        	TX_ISR_SOURCE = TX_STRING;
+
+        	//Start from first char in the string
+        	g_u8TxStringIndex = 0;
+
+        	//Save address of string buffer
+        	g_pU8TxStringBuffer = Cpy_pu8String;
+
+        	//Passing notification function to ISR
+        	g_pTxStringNotifyFunc = ptrNotificationFunc;
+
+            //Enable UDR empty interrupt
+            SET_BIT(USART_UCSRB_REG, UCSRB_UDRIE);
+
+        	//Sending success
+        	ERR = ES_SUCCESS;
+        }
+    }
+    else
+    {
+    	ERR = ES_BUSY_FUNC;
+    }
+
+	return ERR;
+}
+
+USART_ERROR_t USART_ErrReadCharAsync(u8 *Cpy_pu8Char, void (*ptrNotificationFunc)(void))
+{
+    USART_ERROR_t ERR;
+    //Check valid pointer
+    if(Cpy_pu8Char == (u8 *)NULL)
+    {
+    	//Return null pointer error state
+    	ERR = ES_NULL_POINTER;
+    }
+    else
+    {
+    	//Check if USART ready to read or not
+    	if(USART_STATUS == USART_BUSY)
+    	{
+    		//Return busy function error
+    		ERR = ES_BUSY_FUNC;
+    	}
+    	else
+    	{
+    		//Change USART status to busy until finish reading process
+    		USART_STATUS = USART_BUSY;
+
+    		//Set ISR source
+    		RX_ISR_SOURCE = RX_CHAR;
+
+    		//Save address of reading place
+    		g_pU8RxCharBuffer = Cpy_pu8Char;
+
+    		//Save address of notification function
+    		g_pRxCharNotifyFunc = ptrNotificationFunc;
+
+    		//Enable receive complete interrupt
+    		SET_BIT(USART_UCSRB_REG, UCSRB_RXCIE);
+
+        	//Sending success
+        	ERR = ES_SUCCESS;
+    	}//End inner if
+    }//End outer if
+
+	return ERR;
+}
+
+USART_ERROR_t USART_ErrReadStringAsync(u8 *const Cpy_pu8Char, u8 Cpy_u8Size, void (*ptrNotificationFunc)(void))
+{
+    USART_ERROR_t ERR;
+
+    //Check valid pointer
+    if(Cpy_pu8Char == (u8 *const)NULL)
+    {
+    	//Return null pointer error state
+    	ERR = ES_NULL_POINTER;
+    }
+    else
+    {
+    	//Check if USART ready to read or not
+    	if(USART_STATUS == USART_BUSY)
+    	{
+    		//Return busy function error
+    		ERR = ES_BUSY_FUNC;
+    	}
+    	else
+    	{
+    		//Change USART status to busy until finish reading process
+    		USART_STATUS = USART_BUSY;
+
+    		//Set ISR source
+    		RX_ISR_SOURCE = RX_STRING;
+
+    		//Save address of reading place
+    		g_pU8RxStringBuffer = Cpy_pu8Char;
+
+    		//Save size of the string
+    		g_u8RxStringSize = Cpy_u8Size;
+
+    		//Reset string index
+    		g_u8RxStringIndex = 0;
+
+    		//Save notification function
+    		g_pRxStringNotifyFunc = ptrNotificationFunc;
+
+    		//Enable receive complete interrupt
+    		SET_BIT(USART_UCSRB_REG, UCSRB_RXCIE);
+
+        	//Sending success
+        	ERR = ES_SUCCESS;
+    	}//End inner if
+    }//End outer if
+
+	return ERR;
 }
 
 
+//UDR empty interrupt routine service
+ISR(UDRE_VECT)
+{
+
+	//If ISR coming from sending single char
+	if(TX_ISR_SOURCE == TX_CHAR)
+	{
+		//Make USART idle so that can sending again
+		USART_STATUS = USART_IDLE;
+
+	    //Disable UDR empty interrupt
+	    CLR_BIT(USART_UCSRB_REG, UCSRB_UDRIE);
+
+		//Make sure valid pointer to function
+		if(g_pTxCharNotifyFunc != NULL)
+		{
+			//Call notification function
+			g_pTxCharNotifyFunc();
+		}
+
+	}
+	//If ISR coming from sending a whole string
+	else if(TX_ISR_SOURCE == TX_STRING)
+	{
+		//Check if reach string end or not
+		if(g_pU8TxStringBuffer[g_u8TxStringIndex] != '\0')
+		{
+			//Load char into UDR register to be sent
+			USART_UDR_REG = g_pU8TxStringBuffer[g_u8TxStringIndex];
+			//Increase string index to send next char
+			g_u8TxStringIndex++;
+		}
+		//If reach string end
+		else
+		{
+			//Release USART so that it can send and read
+			USART_STATUS = USART_IDLE;
+
+			//Disable UDR empty interrupt
+			CLR_BIT(USART_UCSRB_REG, UCSRB_UDRIE);
+
+			//If there is a notification function call it
+			if(g_pTxStringNotifyFunc != NULL)
+			{
+				g_pTxStringNotifyFunc();
+			}
+		}//End inner if
+	}//End outer if
+}//End ISR
+
+
+//RXC interrupt routine service
+ISR(RXC_VECT)
+{
+	//If ISR occur due to reading single char
+	if(RX_ISR_SOURCE == RX_CHAR)
+	{
+		//Read UDR register
+		*g_pU8RxCharBuffer = USART_UDR_REG;
+
+		//Release USART and make it available
+		USART_STATUS = USART_IDLE;
+
+		//Disable RXIE
+		CLR_BIT(USART_UCSRB_REG, UCSRB_RXCIE);
+
+		//Check if there is a notification or not
+		if(g_pRxCharNotifyFunc != NULL)
+		{
+			//Call notification function
+			g_pRxCharNotifyFunc();
+		}
+
+	}
+	//Else if ISR occur due to reading a whole string
+	else if(RX_ISR_SOURCE == RX_STRING)
+	{
+		//Load UDR register in the reading buffer
+		g_pU8RxStringBuffer[g_u8RxStringIndex] = USART_UDR_REG;
+
+		//Increase index to load next char
+		g_u8RxStringIndex++;
+
+		//Check limits of size or find terminate key
+		if((g_u8RxStringIndex >= g_u8RxStringSize) || (g_pU8RxStringBuffer[g_u8RxStringIndex-1] == END_READING_KEY))
+		{
+			//Add string terminator
+			g_pU8RxStringBuffer[g_u8RxStringIndex-1] = '\0';
+
+			//Release USART and make it available
+			USART_STATUS = USART_IDLE;
+
+			//Disable RXIE
+			CLR_BIT(USART_UCSRB_REG, UCSRB_RXCIE);
+
+			//Check if there is a notification or not
+			if(g_pRxStringNotifyFunc != NULL)
+			{
+				//Call notification function
+				g_pRxStringNotifyFunc();
+			}
+
+		}//End inner if
+	}//End outer if
+}//End function

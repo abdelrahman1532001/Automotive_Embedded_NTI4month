@@ -17,10 +17,10 @@ typedef enum{
 	TX_FAILED_RESEND_NUM,
 	RX_SUCCESS,
 }USART_ERROR_t;
-USART_ERROR_t USART_ErrSendCharAsync(u8  Cpy_u8DataFrame);
-USART_ERROR_t USART_ErrReadCharAsync(u8* Cpy_pu8DataFrame);
-USART_ERROR_t USART_ErrSendStringAsync(const u8* Cpy_pU8String);
-USART_ERROR_t USART_ErrReadStringAsync(u8* const Cpy_pU8String, u8 Cpy_u8Size);
+USART_ERROR_t USART_ErrSendCharSync(u8  Cpy_u8DataFrame);
+USART_ERROR_t USART_ErrReadCharSync(u8* Cpy_pu8DataFrame);
+USART_ERROR_t USART_ErrSendStringSync(const u8* Cpy_pU8String);
+USART_ERROR_t USART_ErrReadStringSync(u8* const Cpy_pU8String, u8 Cpy_u8Size);
 
 
 

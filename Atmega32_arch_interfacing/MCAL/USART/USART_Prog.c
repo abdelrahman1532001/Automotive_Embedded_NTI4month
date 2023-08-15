@@ -66,7 +66,7 @@ void USART_vidInit(void)
 
 }
 
-USART_ERROR_t USART_ErrSendCharAsync(u8 Cpy_u8DataFrame)
+USART_ERROR_t USART_ErrSendCharSync(u8 Cpy_u8DataFrame)
 {
 	//Timeout counter
 	USART_ERROR_t ERR = TX_SUCCESS;
@@ -94,7 +94,7 @@ USART_ERROR_t USART_ErrSendCharAsync(u8 Cpy_u8DataFrame)
 
 }
 
-USART_ERROR_t USART_ErrReadCharAsync(u8* Cpy_pu8DataFrame)
+USART_ERROR_t USART_ErrReadCharSync(u8* Cpy_pu8DataFrame)
 {
 	USART_ERROR_t ERR = RX_SUCCESS;
 
@@ -107,14 +107,14 @@ USART_ERROR_t USART_ErrReadCharAsync(u8* Cpy_pu8DataFrame)
 	return ERR;
 }
 
-USART_ERROR_t USART_ErrReadStringAsync(u8* const Cpy_pU8String, u8 Cpy_u8Size)
+USART_ERROR_t USART_ErrReadStringSync(u8* const Cpy_pU8String, u8 Cpy_u8Size)
 {
 	USART_ERROR_t ERR = TX_SUCCESS; //Default status of sending
 	u8 Local_u8iLoop = 0;
 
 	do{
 		//Read UDR
-		ERR = USART_ErrReadCharAsync(&(Cpy_pU8String[Local_u8iLoop]));
+		ERR = USART_ErrReadCharSync(&(Cpy_pU8String[Local_u8iLoop]));
 
 		//Check Reading status
 		if(ERR == RX_SUCCESS)
@@ -135,7 +135,7 @@ USART_ERROR_t USART_ErrReadStringAsync(u8* const Cpy_pU8String, u8 Cpy_u8Size)
 }
 
 
-USART_ERROR_t USART_ErrSendStringAsync(const u8* Cpy_pU8String)
+USART_ERROR_t USART_ErrSendStringSync(const u8* Cpy_pU8String)
 {
 	USART_ERROR_t ERR = TX_SUCCESS; //Default status of sending
 	u8 Local_u8iLoop = 0; //Counter to loop on string
@@ -145,7 +145,7 @@ USART_ERROR_t USART_ErrSendStringAsync(const u8* Cpy_pU8String)
 	while(Cpy_pU8String[Local_u8iLoop] != '\0')
 	{
 		//Sending the current character
-		ERR = USART_ErrSendCharAsync(Cpy_pU8String[Local_u8iLoop]);
+		ERR = USART_ErrSendCharSync(Cpy_pU8String[Local_u8iLoop]);
 
 		//Check sending status
 		if(ERR == TX_SUCCESS)
@@ -170,7 +170,7 @@ USART_ERROR_t USART_ErrSendStringAsync(const u8* Cpy_pU8String)
 void USART_vidPrintNewLine(void)
 {
 	//Sending ASCII of ENTER key
-	USART_ErrSendCharAsync('\r');
+	USART_ErrSendCharSync('\r');
 }
 
 
